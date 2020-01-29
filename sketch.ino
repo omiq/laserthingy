@@ -71,7 +71,8 @@ void loop() {
     
     
 
-
+   if(halt==1) 
+   {
     // wait before continue
     // the pause is set by buttons
     for(int tick = 0; tick < 100 * speed; tick++)
@@ -82,6 +83,7 @@ void loop() {
      
       delay(10);
     }
+   }
   }
 
   // check the buttons
