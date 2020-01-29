@@ -24,7 +24,8 @@
 int speed = 3;
 
 // Status of the sensor (LOW is triggered)
-int hallstate = HIGH;    
+int hallstate = HIGH;  
+int halt = 0;  
 
 // initialize the stepper library
 Stepper myStepper(4096, MOTOR1, MOTOR3, MOTOR2, MOTOR4);
@@ -43,23 +44,7 @@ void setup() {
   pinMode(PAUSE, INPUT);    
   pinMode(FAST, INPUT);    
 
-  // while the hall effect sensor is not triggered
-  // rotate the disc. This positions to a known 
-  // starting place
-  while( digitalRead(HALLSENSORPIN) == HIGH )
-  {
-       
-          // rotate one step
-          myStepper.step(1);
-          
-          // tiny delay
-          delay(5);
-        
-
-  }
-
-  // big pause before starting proper
-  delay(5000);
+ 
 }
 
 // Keep the motor running until power is off
@@ -68,15 +53,13 @@ void setup() {
 void loop() {
 
   // while not paused ...
-  while(speed > 0) {
+  while(speed > 0 && halt == 0) {
 
     // keep rotating until positioned at next hole
-    // (NEXTHOLE is set above in number of steps)
-    for(int step = 0; step < NEXTHOLE; step++)
-    {
+    
    
       // take a step if not paused
-      if(speed > 0) myStepper.step(1);
+      myStepper.step(1);
 
       // check the buttons have been pressed
       checkButtons();
@@ -84,7 +67,7 @@ void loop() {
       // tiny delay
       delay(5);
     
-    }
+    
 
 
     // wait before continue
@@ -94,6 +77,7 @@ void loop() {
 
       // check the buttons
       checkButtons();
+      halt = 0;
       delay(10);
     }
   }
@@ -105,6 +89,11 @@ void loop() {
 // Check for button presses
 void checkButtons()
 {
+
+
+  if ( digitalRead(HALLSENSORPIN) == LOW ) halt = 1;
+ 
+       
 
   // slower button
   if(digitalRead(SLOW) == LOW) 
