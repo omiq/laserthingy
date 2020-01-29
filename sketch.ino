@@ -52,6 +52,8 @@ void setup() {
 // Speed is controlled by butons
 void loop() {
 
+  halt = 0;
+
   // while not paused ...
   while(speed > 0 && halt == 0) {
 
@@ -77,7 +79,7 @@ void loop() {
 
       // check the buttons
       checkButtons();
-      halt = 0;
+     
       delay(10);
     }
   }
